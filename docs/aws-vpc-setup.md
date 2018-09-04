@@ -1,3 +1,5 @@
+# AWS VPC SETUP
+
 First off, a Virtual Private Cloud (VPC) is a section of the AWS cloud where you can launch and use AWS resources in. Basically, a virtual network.
 
 We were tasked with setting up a VPC that consists of 3 public subnets, each with 1024 IP addresses, and 3 private subnets, each with 4096 IP addresses. Additionally, two route tables and an internet gateway (igw).
