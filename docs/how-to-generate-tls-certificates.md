@@ -1,5 +1,7 @@
 # How to generate TLS/SSL certificates
 
+
+## What We Need To Do
 We were tasked to obtain a TLS certificate for the following domains
 
 ```matabit.org
@@ -8,10 +10,11 @@ blog.matabit.org```
 
 To simplify the process for these and any future domains, we need to obtain a wildcard certificate.
 
+## Where We Get The Certificate
 The certificate authority that we use is [Let's Encrypt](https://letsencrypt.org/).
 To request these certificates on our AWS EC2 instance, we use [Certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx).
 
-To install Certbot run the following commands:
+## To install Certbot run the following commands:
 
 ```$ sudo apt-get update
 $ sudo apt-get install software-properties-common
@@ -21,6 +24,7 @@ $ sudo apt-get install python-certbot-nginx```
 
 This installs all the necessary dependencies to run certbot on the server and request the certificates.
 
+## Request The Ceritficate
 Afterwards, we can run the following command to request the certificate:
 
 ```$ sudo certbot certonly --manual -d *.matabit.org -d matabit.org -m dev@anthonyinlavong.com --preferred-challenges dns-01 --server https://acme-v02.api.letsencrypt.org/directory```
@@ -34,6 +38,7 @@ Afterwards, we can run the following command to request the certificate:
 
 The certificate files can be then found in `/etc/letsencrypt/matabit.org/live/*`.
 
+## Configure NGINX
 These certificates then have to be called within the nginx-configuration of the web-server,
 like this:
 ```
