@@ -8,8 +8,8 @@
 
 ## Easymode
 I've created a bash script to easily deploy new blog posts into production. I will also add documentation for the manual method.
-First in the matabit-blog repo. Allow the execution of the `deploy.sh` script by running `chmod +x deploy.sh`. Now watch the magic
-as the blog post builds and deploys into production. Below are the contents of the bash script. 
+First in the matabit-blog repo. Allow the execution of the `deploy.sh` script by running `chmod +x deploy.sh`. Run the script
+with `./deploy.sh`. Now watch the magic as the blog post builds and deploys into production. Below are the contents of the bash script. 
 
 To break it down:
   * Runs `hugo` locally to build pages in the public directory
@@ -48,3 +48,16 @@ printf "Blog has been deployed\n"
 printf "============================\n"
 echo
 ```
+
+## Manual method
+There are multiple ways to deploy the blog manually. One way is to follow the deploy script rather than running it, you will
+get the same result. Given the requirements we are not allowed to clone the repo into the EC2 instance, instead we should transfer the respective files over. Extract the file into the respective webroot. 
+
+To get started: 
+  * Build the hugo site using the `hugo` command in the project directory
+  * Zip or Tar the public/ directory. In this case I will zip the directory using `zip -r public.zip public`
+  * Transfer the zip file to the EC2. You may use rsync, SCP, SFTP. In this example we will use rsync `rsync -azP public.zip ubuntu@matabit.org:/home/ubuntu/hugo/` This will transfer the local public.zip file into the Home directory of the Ubuntu user into a Hugo folder.
+  * SSH into the EC2 using `ssh ubuntu@matabit.org`
+  * Unzip/Decompress public zip file into Nginx webroot. `sudo -o unzip hugo/public -d /var/www/matabit-blog` Sudo is required becaue we are writing the the /var/www directory. The -o flag specifies to overwrite files. The -d flag specifies the destination. 
+  * It's good practice to change the group and user to www-data for webfiles. When we used sudo the permissions we set to only the root user/group. Change the ownership using `sudo chown -hR www-data:www-data /var/www/matabit-blog`
+  * Blog is now deployed! Of course you can swap out commands, it all up to the deployer.
