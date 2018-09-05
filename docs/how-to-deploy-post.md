@@ -1,4 +1,4 @@
-# How do deploy a blog post to production
+# How to deploy a blog post to production
 
 ## Requirements:
  * Hugo
