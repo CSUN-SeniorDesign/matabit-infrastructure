@@ -14,7 +14,8 @@ In order to ensure traffic could reach our NGINX server on the ports we needed, 
 The next step of setting up NGINX was ensuring that any traffic being sent on port 80 would automatically get redirected to port 443 to HTTPS. In order to accomplish this we had to add the following lines to /etc/nginx/sites-enabled/default:
 
 
-``` if ($host ~ ^[^.]+\.matabit\.org$) {
+``` 
+if ($host ~ ^[^.]+\.matabit\.org$) {
         return 301 https://$host$request_uri;
      } # managed by Certbot
    ### using regex we find all the wildcard domains and then reroute them with a 301 message to the https version of that route
