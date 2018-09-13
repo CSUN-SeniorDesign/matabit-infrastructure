@@ -37,3 +37,8 @@ variable "private_subnet_cidr_c" {
   description = "CIDR for the private subnet-c"
   default     = "132.124.48.0/20"
 }
+
+variable "aws_route53_matabit_zone_id" {
+  description = "Hosted zone ID for Matabit"
+  default = "Z1CSZ4RFCJ1SAK"
+}

@@ -178,6 +178,15 @@ resource "aws_eip" "nat" {
   vpc      = true
 }
 
+# Add Route53 name to NAT instance
+resource "aws_route53_record" "ssh" {
+  zone_id = "${var.aws_route53_matabit_zone_id}"
+  name    = "ssh"
+  type    = "A"
+  ttl     = "300"
+  records = ["${aws_eip.nat.public_ip}"]
+}
+
 # Define the internet gateway
 resource "aws_internet_gateway" "gw" {
   vpc_id = "${aws_vpc.default.id}"
