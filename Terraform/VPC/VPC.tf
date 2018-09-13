@@ -261,3 +261,7 @@ resource "aws_route_table_association" "private-rt-c" {
 output "vpc_id" {
   value = "${aws_vpc.default.id}"
 }
+
+output "nat_sg_id" {
+  value = "${aws_security_group.nat.id}"
+}
