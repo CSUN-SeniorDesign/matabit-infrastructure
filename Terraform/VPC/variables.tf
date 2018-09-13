@@ -1,5 +1,5 @@
 variable "aws_region" {
-  description = "Main VPC"
+  description = "Main Matabit VPC"
   default     = "us-west-2"
 }
 

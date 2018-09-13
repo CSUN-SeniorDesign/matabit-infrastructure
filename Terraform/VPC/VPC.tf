@@ -1,3 +1,4 @@
+
 terraform {
   backend "s3" {
     bucket = "matabit-terraform-state-bucket"
@@ -18,7 +19,7 @@ resource "aws_vpc" "default" {
   enable_dns_hostnames = true
 
   tags {
-    Name = "test-vpc"
+    Name = "matabit-vpc"
   }
 }
 
@@ -155,6 +156,7 @@ resource "aws_security_group" "nat" {
   }
 }
 
+# Create NAT instance
 resource "aws_instance" "nat" {
   ami                         = "ami-40d1f038"                     # this is a special ami preconfigured to do NAT
   availability_zone           = "us-west-2a"
@@ -164,12 +166,13 @@ resource "aws_instance" "nat" {
   subnet_id                   = "${aws_subnet.public-subnet-a.id}"
   associate_public_ip_address = true
   source_dest_check           = false
-
+  user_data = "${file("../cloud-init.conf")}"
   tags {
     Name = "VPC-NAT"
   }
 }
 
+# Give NAT instance an EIP
 resource "aws_eip" "nat" {
   instance = "${aws_instance.nat.id}"
   vpc      = true
@@ -184,7 +187,7 @@ resource "aws_internet_gateway" "gw" {
   }
 }
 
-# Define the route table
+# Define public route table
 resource "aws_route_table" "public-rt" {
   vpc_id = "${aws_vpc.default.id}"
 
@@ -198,6 +201,7 @@ resource "aws_route_table" "public-rt" {
   }
 }
 
+# Define private route table attached to NAT instance
 resource "aws_route_table" "private-rt" {
   vpc_id = "${aws_vpc.default.id}"
 
@@ -211,7 +215,7 @@ resource "aws_route_table" "private-rt" {
   }
 }
 
-# Assign the route table to the public Subnet
+# Assign the public subnet to public route
 resource "aws_route_table_association" "public-rt-a" {
   subnet_id      = "${aws_subnet.public-subnet-a.id}"
   route_table_id = "${aws_route_table.public-rt.id}"
@@ -227,7 +231,7 @@ resource "aws_route_table_association" "public-rt-c" {
   route_table_id = "${aws_route_table.public-rt.id}"
 }
 
-# Assign Private route 
+# Assign private subnet to private route table
 resource "aws_route_table_association" "private-rt-a" {
   subnet_id      = "${aws_subnet.private-subnet-a.id}"
   route_table_id = "${aws_route_table.private-rt.id}"
@@ -241,4 +245,10 @@ resource "aws_route_table_association" "private-rt-b" {
 resource "aws_route_table_association" "private-rt-c" {
   subnet_id      = "${aws_subnet.private-subnet-c.id}"
   route_table_id = "${aws_route_table.private-rt.id}"
+}
+
+
+# Outputs
+output "vpc_id" {
+  value = "${aws_vpc.default.id}"
 }
