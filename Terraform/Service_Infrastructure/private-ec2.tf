@@ -25,6 +25,7 @@ resource "aws_instance" "web" {
   ami = "ami-51537029"
   instance_type = "t2.micro"
   subnet_id = "${data.terraform_remote_state.vpc.aws_subnet_private_a_id}"
+  availability_zone = "us-west-2a"
   user_data = "${file("../cloud-init.conf")}"
   tags {
     Name = "matabit-private-ec2"
