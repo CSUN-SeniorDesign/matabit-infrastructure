@@ -161,7 +161,7 @@ resource "aws_instance" "nat" {
   ami                         = "ami-40d1f038"                     # this is a special ami preconfigured to do NAT
   availability_zone           = "us-west-2a"
   instance_type               = "t2.micro"
-  key_name                    = "test"
+  key_name                    = "matabit"
   vpc_security_group_ids      = ["${aws_security_group.nat.id}"]
   subnet_id                   = "${aws_subnet.public-subnet-a.id}"
   associate_public_ip_address = true
@@ -257,11 +257,3 @@ resource "aws_route_table_association" "private-rt-c" {
 }
 
 
-# Outputs
-output "vpc_id" {
-  value = "${aws_vpc.default.id}"
-}
-
-output "nat_sg_id" {
-  value = "${aws_security_group.nat.id}"
-}
