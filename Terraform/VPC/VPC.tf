@@ -1,4 +1,3 @@
-
 terraform {
   backend "s3" {
     bucket = "matabit-terraform-state-bucket"
@@ -166,7 +165,8 @@ resource "aws_instance" "nat" {
   subnet_id                   = "${aws_subnet.public-subnet-a.id}"
   associate_public_ip_address = true
   source_dest_check           = false
-  user_data = "${file("../cloud-init.conf")}"
+  user_data                   = "${file("../cloud-init.conf")}"
+
   tags {
     Name = "VPC-NAT"
   }
@@ -255,5 +255,3 @@ resource "aws_route_table_association" "private-rt-c" {
   subnet_id      = "${aws_subnet.private-subnet-c.id}"
   route_table_id = "${aws_route_table.private-rt.id}"
 }
-
-
