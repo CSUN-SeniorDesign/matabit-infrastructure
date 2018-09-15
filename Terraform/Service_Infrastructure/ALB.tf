@@ -9,19 +9,17 @@ terraform {
 
 #define ALB
 resource "aws_lb" "alb" {
-    name = "aws-lb-tf"
+    name = "aws-lb"
     internal = false
     load_balancer_type = "application"
-    security_groups = ["${aws_security_group.security_lb}"]
+    security_groups = ["${aws_security_group.security-lb.id}"]
     idle_timeout = "60"
     enable_cross_zone_load_balancing = true
-    enable_deletion_protection = true
-    availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
+    enable_deletion_protection = false
+    subnets = ["${data.terraform_remote_state.vpc.aws_subnet_public_a_id}", "${data.terraform_remote_state.vpc.aws_subnet_public_b_id}"]
 
-    access_logs {
-        enabled = true
-        bucket = "matabit-terraform-state-bucket"
-        prefix = "alb_access_logs"
+    tags{
+        name = "matabit-alb"
     }
 
     timeouts {
@@ -29,20 +27,13 @@ resource "aws_lb" "alb" {
         delete = "10m"
         update = "10m"
     }
-
-    subnet_mapping {
-        subnet_id    = "${data.terraform_remote_state.vpc.aws_subnet_public_b_id}"
-        allocation_id = "${aws_eip.alb.id}"
-    }
+    
 }
-resource "aws_eip" "alb" {
-    vpc      = true
-}
-
 
 # Security Group: Load Balancer
 resource "aws_security_group" "security-lb" {
   description = "Allow the world to use HTTP from the load balancer"
+  vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
   ingress {
     from_port   = 80
     to_port     = 80
@@ -67,7 +58,7 @@ resource "aws_security_group" "security-lb" {
 
 #listen on port 80 and redirect to port 443
 resource "aws_alb_listener" "frontend_http" {
-    load_balancer_arn = "${aws_alb.alb.arn}"
+    load_balancer_arn = "${aws_lb.alb.arn}"
     port = "80"
     protocol = "HTTP"
 
@@ -84,7 +75,7 @@ resource "aws_alb_listener" "frontend_http" {
 
 #listen on port 443 and forward traffic
 resource "aws_alb_listener" "frontend_https" {
-    load_balancer_arn = "${aws_alb.alb.arn}"
+    load_balancer_arn = "${aws_lb.alb.arn}"
     port = "443"
     protocol = "HTTPS"
     ssl_policy = "ELBSecurityPolicy-2015-05"
@@ -98,12 +89,12 @@ resource "aws_alb_listener" "frontend_https" {
 
 #create target group
 resource "aws_alb_target_group" "alb_target_group" {  
-    name = "target_group_name"  
+    name = "target-group-name"  
     port = "443"  
     protocol = "HTTPS"  
-    vpc_id = "matabit-vpc"   
+    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"   
     tags {    
-        name = "target_group_name"    
+        name = "target-group-name"    
     }   
     stickiness {    
         type = "lb_cookie"    
@@ -117,10 +108,7 @@ resource "aws_alb_target_group" "alb_target_group" {
         timeout = 5    
         interval = 10    
         path = ""    
-        port = ""  
+        port = "443"  
     }
 }
 
-output "alb_eip" {
-  value = "${aws_eip.alb}"
-}

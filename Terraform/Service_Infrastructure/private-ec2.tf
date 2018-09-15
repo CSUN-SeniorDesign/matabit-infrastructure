@@ -28,10 +28,9 @@ resource "aws_instance" "web" {
   instance_type = "t2.micro"
   subnet_id = "${data.terraform_remote_state.vpc.aws_subnet_private_a_id}"
   vpc_security_group_ids = ["${aws_security_group.web_sg.id}"]
-  availability_zone = "us-west-2a"
   user_data = "${file("../cloud-init.conf")}"
   tags {
-    Name = "matabit-private-ec2"
+    Name = "matabit-private-ec2-1"
   }
 }
 
@@ -40,11 +39,10 @@ resource "aws_instance" "web2" {
   ami = "ami-51537029"
   instance_type = "t2.micro"
   subnet_id = "${data.terraform_remote_state.vpc.aws_subnet_private_b_id}"
-  availability_zone = "us-west-2b"
   vpc_security_group_ids = ["${aws_security_group.web_sg.id}"]
   user_data = "${file("../cloud-init.conf")}"
   tags {
-    Name = "matabit-private-ec2"
+    Name = "matabit-private-ec2-2"
   }
 }
 
@@ -52,6 +50,7 @@ resource "aws_instance" "web2" {
 resource "aws_security_group" "web_sg" {
   name = "private_web_sg"
   description = "Allow all outbound; only SSH inbound"
+  vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
   ingress {
     from_port = 22
