@@ -16,9 +16,12 @@ resource "aws_lb" "alb" {
     idle_timeout = "60"
     enable_cross_zone_load_balancing = true
     enable_deletion_protection = false
-    subnets = ["${data.terraform_remote_state.vpc.aws_subnet_public_a_id}", "${data.terraform_remote_state.vpc.aws_subnet_public_b_id}"]
+    subnets = [
+                "${data.terraform_remote_state.vpc.aws_subnet_public_a_id}",
+                "${data.terraform_remote_state.vpc.aws_subnet_public_b_id}"
+              ]
 
-    tags{
+    tags {
         name = "matabit-alb"
     }
 
@@ -79,7 +82,6 @@ resource "aws_alb_listener" "frontend_https" {
     port = "443"
     protocol = "HTTPS"
     ssl_policy = "ELBSecurityPolicy-2015-05"
-    certificate_arn = ""
 
     default_action {
         type = "forward"
