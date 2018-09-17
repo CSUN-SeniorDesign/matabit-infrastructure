@@ -1,0 +1,42 @@
+---
+  - name: Update cache 
+    become: true
+    apt:
+      update_cache: yes
+  
+  - name: Install Hugo snap 
+    become: true
+    command: snap install hugo
+
+  - name: Get matabit blog
+    become: true
+    git:
+      repo: 'https://github.com/CSUN-SeniorDesign/matabit-blog.git'
+      dest: /var/www/matabit-blog/
+  
+  - name: Get submodule
+    become: true
+    shell: 
+    args: 
+      chdir: /var/www/matabit-blog/themes/hyde-hyde 
+      cmd: git submodule init; git submodule update
+
+  - name: Build Hugo site
+    shell:
+    args:
+      chdir: /var/www/matabit-blog/
+      cmd: hugo
+
+  - name: Change Nginx default site settings
+    become: true
+    template:
+      src: default
+      dest: /etc/nginx/site-available/default
+  
+  - name: restart nginx
+    become: true
+    service: 
+      name: nginx 
+      state: restarted
+
+
