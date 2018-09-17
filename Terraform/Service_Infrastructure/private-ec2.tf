@@ -83,7 +83,6 @@ resource "aws_security_group" "web_sg" {
   tags {
     Name = "matabit-private-ec2-SG"
   }
-  
 }
 
 output "aws_private_ec2_id" {

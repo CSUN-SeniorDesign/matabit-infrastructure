@@ -28,7 +28,7 @@ resource "aws_lb" "alb" {
               ]
 
     tags {
-        name = "matabit-alb"
+        Name = "matabit-alb"
     }
 
     timeouts {
@@ -62,6 +62,10 @@ resource "aws_security_group" "security-lb" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+      Name = "matabit-alb-sg"
   }
 }
 
@@ -123,7 +127,12 @@ resource "aws_alb_target_group" "alb_target_group" {
 }
 resource "aws_lb_target_group_attachment" "matabit_alb_tg" {
   target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
-  target_id        = "${aws_lb.alb.id}"
+  target_id        = "${aws_instance.web.id}"
+  port             = 80
+}
+resource "aws_lb_target_group_attachment" "matabit_alb_tg2" {
+  target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
+  target_id        = "${aws_instance.web2.id}"
   port             = 80
 }
 
