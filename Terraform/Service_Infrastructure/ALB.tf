@@ -7,6 +7,12 @@ terraform {
     }
 }
 
+data "aws_acm_certificate" "matabit" {
+    domain = "matabit.org"
+    types = ["AMAZON_ISSUED"]
+    most_recent = true
+}
+
 #define ALB
 resource "aws_lb" "alb" {
     name = "aws-lb"
@@ -82,6 +88,8 @@ resource "aws_alb_listener" "frontend_https" {
     port = "443"
     protocol = "HTTPS"
     ssl_policy = "ELBSecurityPolicy-2015-05"
+    certificate_arn = "${data.aws_acm_certificate.matabit.arn}"
+
 
     default_action {
         type = "forward"
@@ -108,7 +116,7 @@ resource "aws_alb_target_group" "alb_target_group" {
         healthy_threshold = 3    
         unhealthy_threshold = 10    
         timeout = 5    
-        interval = 10    
+        interval = 10
         path = ""    
         port = "443"  
     }

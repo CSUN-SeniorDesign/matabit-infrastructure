@@ -3,16 +3,6 @@ data "aws_route53_zone" "selected" {
   private_zone = false
 }
 
-resource "aws_route53_record" "alb-record-txt" {
-  zone_id = "${data.aws_route53_zone.selected.id}" # Replace with your zone ID
-  name    = "_acme-challenge.matabit.org." # Replace with your name/domain/subdomain
-  type    = "TXT"
-  ttl = "60"
-  records = [
-              "UphA6dM4tFTvQ-4IEz3yT-LZHiqqKVcn3WP4m3MiqnQ",
-              "rfdPGPEsAdTd2KvnLfPuKt1Sa7AuKnR0NJXl65flqZk"
-            ]
-}
 resource "aws_route53_record" "alb-record-www" {
   zone_id = "${data.aws_route53_zone.selected.id}" # Replace with your zone ID
   name    = "www.matabit.org." # Replace with your name/domain/subdomain
