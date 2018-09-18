@@ -62,3 +62,7 @@ output "aws_private_cidr_b" {
 output "aws_private_cidr_c" {
   value = "${aws_subnet.private-subnet-c.cidr_block}"
 }
+
+output "aws_vpc_cidr" {
+  value = "${var.vpc_cidr}"
+}
