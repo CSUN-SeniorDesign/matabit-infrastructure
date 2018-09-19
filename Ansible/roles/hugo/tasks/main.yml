@@ -5,7 +5,7 @@
       path: /var/www/matabit-blog/public
       state: directory
     
-  - name: Unzip pubic.zip 
+  - name: Unzip public.zip 
     become: true
     unarchive:
       src: ~/CIT480/matabit-blog/public.zip
