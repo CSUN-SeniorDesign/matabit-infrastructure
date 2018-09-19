@@ -6,6 +6,8 @@
       state: present
     with_items:
       - nginx
+      - unzip
+      - zip
       
   - name: Change Nginx default site settings
     become: true
