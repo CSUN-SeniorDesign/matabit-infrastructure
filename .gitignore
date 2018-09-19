@@ -20,3 +20,6 @@
 
 #Ansible
 *.retry
+
+# Public.zip from hugo
+public.zip
