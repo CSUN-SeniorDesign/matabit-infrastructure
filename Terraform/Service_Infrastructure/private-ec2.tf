@@ -29,7 +29,6 @@ resource "aws_instance" "web" {
   subnet_id = "${data.terraform_remote_state.vpc.aws_subnet_private_a_id}"
   vpc_security_group_ids = ["${aws_security_group.web_sg.id}"]
   user_data = "${file("../cloud-init.conf")}"
-   private_dns = true
   tags {
     Name = "matabit-private-ec2-1"
   }
@@ -42,7 +41,6 @@ resource "aws_instance" "web2" {
   subnet_id = "${data.terraform_remote_state.vpc.aws_subnet_private_b_id}"
   vpc_security_group_ids = ["${aws_security_group.web_sg.id}"]
   user_data = "${file("../cloud-init.conf")}"
-  private_dns = true
   tags {
     Name = "matabit-private-ec2-2"
   }
