@@ -2,8 +2,24 @@ server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
 
-	# root /var/www/prod/matabit-blog/public;
-	root /var/www/matabit-blog/public;
+	root /var/www/prod/matabit-blog/public;
+
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name www.matabit.org blog.matabit.org matabit.org;
+
+	location / {
+		try_files $uri $uri/ =404;
+		add_header X-Hostname $hostname;
+		add_header X-Private-IP $server_addr;
+	}
+}
+
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	root /var/www/staging/matabit-blog/public;
 
 	index index.html index.htm index.nginx-debian.html;
 
