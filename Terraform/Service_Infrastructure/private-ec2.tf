@@ -49,7 +49,7 @@ resource "aws_instance" "web2" {
 # Security group
 resource "aws_security_group" "web_sg" {
   name = "private_web_sg"
-  description = "Allow all outbound; only SSH/HTTP/HTTPS inbound"
+  description = "Allow all outbound; only SSH inbound"
   vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
   ingress {
