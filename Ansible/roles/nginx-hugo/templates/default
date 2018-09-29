@@ -1,12 +1,9 @@
 server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
-
+	listen 80;
+	listen [::]:80;
 	root /var/www/prod/matabit-blog/public;
-
-	index index.html index.htm index.nginx-debian.html;
-
 	server_name www.matabit.org blog.matabit.org matabit.org;
+	index index.html index.htm index.nginx-debian.html;
 
 	location / {
 		try_files $uri $uri/ =404;
@@ -16,14 +13,11 @@ server {
 }
 
 server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
-
+	listen 80;
+	listen [::]:80;
 	root /var/www/staging/matabit-blog/public;
-
+	server_name www.staging.matabit.org blog.staging.matabit.org staging.matabit.org;
 	index index.html index.htm index.nginx-debian.html;
-
-	server_name www.matabit.org blog.matabit.org matabit.org;
 
 	location / {
 		try_files $uri $uri/ =404;

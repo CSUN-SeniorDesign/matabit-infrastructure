@@ -1,24 +1,22 @@
 {   
     "provisioners": [
         {
+            "type": "shell",
+            "script": "provision.sh"
+        },
+        {
             "type": "ansible-local",
-            "playbook_dir": "../Ansible/playbooks/project1",
-            "playbook_file": "../Ansible/playbooks/project1/main.yml"
+            "playbook_dir": "../Ansible",
+            "playbook_file": "../Ansible/playbooks/project2/playbook.yml" 
         }
     ],
     "builders": [{
         "type": "amazon-ebs",
         "region": "us-west-2",
-        "source_ami_filter": {
-            "filters": {
-                "virtualization-type": "hvm",
-                "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
-                "root-device-type": "ebs"
-            },
-            "owners": "[amazon]",
-            "most_recent": true
-        },
+        "source_ami": "ami-0bbe6b35405ecebdb",
         "instance_type": "t2.micro",
+        "vpc_id": "vpc-0decb808fa58893e3",
+        "subnet_id": "subnet-0a835301b50d17a4f",
         "ssh_username": "ubuntu",
         "ami_name": "matabit-ami {{timestamp}}"
     }]

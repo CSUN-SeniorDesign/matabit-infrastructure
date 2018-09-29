@@ -1,0 +1,12 @@
+---
+- name: Copy index.nginx-debian.html to the prod folder
+  become: true
+  command: mkdir -p /var/www/prod/matabit-blog/public 
+  
+- name: Copy index.nginx-debian.html to the staging folder
+  become: true
+  command: mkdir -p /var/www/staging/matabit-blog/public
+  
+  
+  
+
