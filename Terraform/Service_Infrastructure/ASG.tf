@@ -1,3 +1,21 @@
+terraform {
+    backend "s3" {
+        bucket = "matabit-terraform-state-bucket"
+        region = "us-west-2"
+        dynamodb_table = "matabit-terraform-statelock"
+        key = "ASG/terraform.tfstate"
+    }
+}
+
+resource "aws_launch_configuration" "asg_conf" {
+  name_prefix = "terraform-"
+  image_id      = "ami-024186669f68d1d1b"
+  instance_type = "t2.micro"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
 resource "aws_placement_group" "aws_placement" {
   name     = "aws_placement"
   strategy = "cluster"
@@ -8,42 +26,18 @@ resource "aws_autoscaling_group" "asg" {
   max_size                  = 5
   min_size                  = 2
   health_check_grace_period = 300
-  health_check_type         = "ELB"
-  desired_capacity          = 4
+  health_check_type         = "EC2"
+  desired_capacity          = 2
   force_delete              = true
   placement_group           = "${aws_placement_group.aws_placement.id}"
-  launch_configuration      = "${aws_launch_configuration.foobar.name}"
-  vpc_zone_identifier       = ["${aws_subnet.example1.id}", "${aws_subnet.example2.id}"]
+  launch_configuration      = "${aws_launch_configuration.asg_conf.name}"
+  vpc_zone_identifier       = ["${aws_subnet.private-subnet-a.id}", "${aws_subnet.private-subnet-b.id}"]
+  target_group_arns         = "${aws_alb_target_group.alb_target_group.arn}"
 
   initial_lifecycle_hook {
-    name                 = "foobar"
+    name                 = "ilh"
     default_result       = "CONTINUE"
     heartbeat_timeout    = 2000
-    lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
-
-    notification_metadata = <<EOF
-{
-  "foo": "bar"
-}
-EOF
-
-    notification_target_arn = "arn:aws:sqs:us-east-1:444455556666:queue1*"
-    role_arn                = "arn:aws:iam::123456789012:role/S3Access"
-  }
-
-  tag {
-    key                 = "foo"
-    value               = "bar"
-    propagate_at_launch = true
-  }
-
-  timeouts {
-    delete = "15m"
-  }
-
-  tag {
-    key                 = "lorem"
-    value               = "ipsum"
-    propagate_at_launch = false
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"   
   }
 }
