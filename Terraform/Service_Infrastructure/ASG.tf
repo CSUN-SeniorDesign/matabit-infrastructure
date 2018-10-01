@@ -11,6 +11,7 @@ resource "aws_launch_configuration" "asg_conf" {
   name_prefix = "terraform-"
   image_id      = "ami-024186669f68d1d1b"
   instance_type = "t2.micro"
+  security_groups = "${aws_security_group.web_sg.id}"
 
   lifecycle {
     create_before_destroy = true
@@ -23,8 +24,8 @@ resource "aws_placement_group" "aws_placement" {
 
 resource "aws_autoscaling_group" "asg" {
   name                      = "asg-terraform"
-  max_size                  = 5
-  min_size                  = 2
+  max_size                  = 2
+  min_size                  = 0
   health_check_grace_period = 300
   health_check_type         = "EC2"
   desired_capacity          = 2
