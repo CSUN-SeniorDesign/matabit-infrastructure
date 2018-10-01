@@ -7,7 +7,7 @@ resource "aws_s3_bucket" "cci_bucket" {
   acl    = "private"
 
   versioning {
-      enabled = true
+    enabled = true
   }
 
   tags {
@@ -17,9 +17,9 @@ resource "aws_s3_bucket" "cci_bucket" {
 }
 
 resource "aws_iam_role" "access" {
-    name = "cci_role_access"
+  name = "cci_role_access"
 
-    assume_role_policy == <<POLICY
+  assume_role_policy = <<POLICY
 {
     "Statement": [
         {
@@ -41,9 +41,9 @@ POLICY
 }
 
 esource "aws_iam_role" "access" {
-    name = "ec2_role_access"
+  name = "ec2_role_access"
 
-    assume_role_policy == <<POLICY
+  assume_role_policy = <<POLICY
 {
     "Statement": [
         {
@@ -63,7 +63,6 @@ esource "aws_iam_role" "access" {
 }
 POLICY
 }
-
 
 resource "aws_iam_role" "replication" {
   name = "tf-iam-role-replication-12345"
