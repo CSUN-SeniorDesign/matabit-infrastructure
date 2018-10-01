@@ -48,13 +48,37 @@ resource "aws_iam_group_policy" "circle-ci-put" {
 EOF
 }
 
-# resource "aws_iam_access_key" "circleci" {
-#   user = "${aws_iam_user.circleci.name}"
-#   pgp_key = "keybase:matabit-circleci"
-# }
+/* EC-2 GET IAM*/
+resource "aws_iam_user" "ec2-get" {
+  name = "ec2-get"
+}
 
+resource "aws_iam_group" "ec2-get" {
+  name = "ec2-get"
+}
 
-# resource "aws_iam_group" "ec2-get-s3" {
-#   name = "ec2-get-s3"
-# }
+resource "aws_iam_group_membership" "ec2-get" {
+  name  = "cirleci"
+  users = ["${aws_iam_user.ec2-get.id}"]
+  group = "${aws_iam_group.ec2-get.name}"
+}
 
+/* IAM Policies */
+resource "aws_iam_group_policy" "ec2-get" {
+  name  = "circle-ci-put"
+  group = "${aws_iam_group.ec2-get.id}"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::/matabit-circleci"
+        }
+    ]
+}
+EOF
+}
