@@ -12,6 +12,7 @@ resource "aws_launch_configuration" "asg_conf" {
   image_id      = "ami-024186669f68d1d1b"
   instance_type = "t2.micro"
   security_groups = "${aws_security_group.web_sg.id}"
+  user_data = "${file("../cloud-init.conf")}"
 
   lifecycle {
     create_before_destroy = true
