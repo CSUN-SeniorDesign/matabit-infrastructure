@@ -11,19 +11,22 @@ provider "aws" {
   region = "us-west-2"
 }
 
+/* Circle CI User/Group */
+resource "aws_iam_user" "circleci" {
+  name = "circleci"
+}
+
 resource "aws_iam_group" "circleci" {
   name = "circleci"
 }
 
-# resource "aws_iam_access_key" "circleci" {
-#   user = "${aws_iam_user.circleci.name}"
-#   pgp_key = "keybase:matabit-circleci"
-# }
-
-resource "aws_iam_group" "ec2-get-s3" {
-  name = "ec2-get-s3"
+resource "aws_iam_group_membership" "circleci" {
+  name  = "cirleci"
+  users = ["${aws_iam_user.circleci.id}"]
+  group = "${aws_iam_group.circleci.name}"
 }
 
+/* IAM Policies */
 resource "aws_iam_group_policy" "circle-ci-put" {
   name  = "circle-ci-put"
   group = "${aws_iam_group.circleci.id}"
@@ -36,24 +39,22 @@ resource "aws_iam_group_policy" "circle-ci-put" {
             "Effect": "Allow",
             "Action": "s3:PutObject",
             "Resource": [
-                "arn:aws:s3:::matabit-circleci"
-            ]
+              "arn:aws:s3:::*/*",
+              "arn:aws:s3:::matabit-circleci"
+              ]
         }
     ]
 }
 EOF
 }
 
-resource "aws_iam_user" "circleci" {
-  name = "circleci"
-}
+# resource "aws_iam_access_key" "circleci" {
+#   user = "${aws_iam_user.circleci.name}"
+#   pgp_key = "keybase:matabit-circleci"
+# }
 
-resource "aws_iam_group_membership" "circleci" {
-  name = "cirleci"
 
-  users = [
-    "${aws_iam_user.circleci.id}",
-  ]
+# resource "aws_iam_group" "ec2-get-s3" {
+#   name = "ec2-get-s3"
+# }
 
-  group = "${aws_iam_group.circleci.name}"
-}
