@@ -1,7 +1,5 @@
 ---
 - name: Install and deploy project1
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
   hosts: all
   roles: 
     - update-cache
