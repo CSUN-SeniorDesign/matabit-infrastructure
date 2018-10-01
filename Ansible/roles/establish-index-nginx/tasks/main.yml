@@ -1,0 +1,12 @@
+---
+- name: Copy index.nginx-debian.html to the prod folder
+  become: true
+  command: cp /var/www/html/index.nginx-debian.html /var/www/prod/matabit-blog/public/index.nginx-debian.html 
+  
+- name: Copy index.nginx-debian.html to the staging folder
+  become: true
+  command: cp /var/www/html/index.nginx-debian.html /var/www/staging/matabit-blog/public/index.nginx-debian.html
+  
+  
+  
+
