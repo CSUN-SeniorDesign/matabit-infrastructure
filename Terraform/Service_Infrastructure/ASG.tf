@@ -13,7 +13,7 @@ resource "aws_launch_configuration" "asg_conf" {
 }
 
 resource "aws_autoscaling_group" "asg" {
-  name                      = "asg-terraform"
+  name                      = "asg-matabit"
   max_size                  = 4
   min_size                  = 2
   health_check_grace_period = 300
@@ -26,10 +26,14 @@ resource "aws_autoscaling_group" "asg" {
   wait_for_capacity_timeout = "15m"
 
   initial_lifecycle_hook {
-    name                 = "ilh"
+    name                 = "ilh_matabit"
     default_result       = "CONTINUE"
     heartbeat_timeout    = 2000
     lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"   
+  }
+
+  tags {
+    Name = "AWS AutoScaling Group Matabit"
   }
 }
 
