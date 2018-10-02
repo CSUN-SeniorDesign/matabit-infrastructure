@@ -24,17 +24,6 @@ resource "aws_autoscaling_group" "asg" {
   vpc_zone_identifier       = ["${data.terraform_remote_state.vpc.aws_subnet_private_a_id}", "${data.terraform_remote_state.vpc.aws_subnet_private_b_id}"]
   target_group_arns         = ["${aws_alb_target_group.alb_target_group.arn}"]
   wait_for_capacity_timeout = "15m"
-
-  initial_lifecycle_hook {
-    name                 = "ilh_matabit"
-    default_result       = "CONTINUE"
-    heartbeat_timeout    = 2000
-    lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"   
-  }
-
-  tags {
-    Name = "AWS AutoScaling Group Matabit"
-  }
 }
 
 resource "aws_autoscaling_attachment" "asg_attachment_bar" {
