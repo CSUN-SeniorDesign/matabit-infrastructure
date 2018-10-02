@@ -1,0 +1,23 @@
+---
+- name: Copy index.nginx-debian.html to the prod folder
+  become: true
+  path: /var/www/prod/matabit-blog/public
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0775
+    recurse: yes
+  
+- name: Copy index.nginx-debian.html to the staging folder
+  become: true
+  file: 
+    path: /var/www/staging/matabit-blog/public
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0775
+    recurse: yes
+  
+  
+  
+
