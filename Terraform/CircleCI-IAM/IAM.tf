@@ -58,14 +58,14 @@ resource "aws_iam_group" "ec2-get" {
 }
 
 resource "aws_iam_group_membership" "ec2-get" {
-  name  = "cirleci"
+  name  = "ec2-get"
   users = ["${aws_iam_user.ec2-get.id}"]
   group = "${aws_iam_group.ec2-get.name}"
 }
 
 /* IAM Policies */
 resource "aws_iam_group_policy" "ec2-get" {
-  name  = "circle-ci-put"
+  name  = "ec2-get"
   group = "${aws_iam_group.ec2-get.id}"
 
   policy = <<EOF
