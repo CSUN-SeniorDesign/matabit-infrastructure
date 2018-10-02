@@ -1,11 +1,3 @@
-terraform {
-    backend "s3" {
-        bucket = "matabit-terraform-state-bucket"
-        region = "us-west-2"
-        dynamodb_table = "matabit-terraform-statelock"
-        key = "ALB/terraform.tfstate"
-    }
-}
 
 data "aws_acm_certificate" "matabit" {
     domain = "matabit.org"
@@ -125,15 +117,3 @@ resource "aws_alb_target_group" "alb_target_group" {
         port = "80"  
     }
 }
-resource "aws_lb_target_group_attachment" "matabit_alb_tg" {
-  target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
-  target_id        = "${aws_instance.web.id}"
-  port             = 80
-}
-resource "aws_lb_target_group_attachment" "matabit_alb_tg2" {
-  target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
-  target_id        = "${aws_instance.web2.id}"
-  port             = 80
-}
-
-
