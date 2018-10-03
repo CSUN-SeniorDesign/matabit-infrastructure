@@ -11,7 +11,7 @@ data "terraform_remote_state" "circleci" {
 
 resource "aws_launch_configuration" "asg_conf" {
   name_prefix = "terraform-"
-  image_id      = "ami-01e145f2beef87dbb"
+  image_id      = "ami-096c300a4ed050024"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.web_sg.id}"]
   user_data = "${file("../cloud-init.conf")}"

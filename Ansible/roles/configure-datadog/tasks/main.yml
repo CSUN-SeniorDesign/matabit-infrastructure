@@ -15,6 +15,5 @@
       src: ssh_check.yaml
       dest: /etc/datadog-agent/conf.d/ssh_check.d/conf.yaml
   - name: Restart DataDog
-    service:
-      name: datadog-agent
-      state: restarted
+    become: true
+    command: systemctl restart datadog-agent
