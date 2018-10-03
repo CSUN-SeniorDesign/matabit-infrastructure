@@ -7,6 +7,7 @@
       mode: +x
   
   - name: Set crontab to get lastest blog version
+    become: true
     cron: 
       minute: "5"
       job: "/usr/local/bin/get-blog"
