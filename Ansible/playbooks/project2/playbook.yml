@@ -8,10 +8,7 @@
     - mkdir-env
     - establish-index-nginx
     - nginx-hugo
-<<<<<<< HEAD
     - install-aws-cli
     - configure-datadog
-=======
     - ec2-get-blog
->>>>>>> 0e28d3fbca66fd97d8d39b1191d42edbae4b1239
     
