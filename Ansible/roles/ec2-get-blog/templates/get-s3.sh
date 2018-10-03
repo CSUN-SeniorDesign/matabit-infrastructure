@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export PATH=${PATH}
 # S3 Bucket
 BUCKET=s3://matabit-circleci
 
