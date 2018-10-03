@@ -8,4 +8,6 @@
     - mkdir-env
     - establish-index-nginx
     - nginx-hugo
+    - install-aws-cli
+    - configure-datadog
     

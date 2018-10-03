@@ -1,0 +1,11 @@
+---
+  - name: Install AWS CLI
+    become: true
+    pip:
+      name: "{{ item }}"
+      state: present
+      extra_args: --upgrade
+    with_items:
+      - awscli
+
+  
