@@ -1,7 +1,7 @@
 ---
   - name: Copy get-s3.sh script to /usr/local/bin
     become: true
-    copy:
+    template:
       src: get-s3.sh
       dest: /usr/local/bin/get-blog
       mode: +x
@@ -9,6 +9,6 @@
   - name: Set crontab to get lastest blog version
     cron: 
       minute: "5"
-      job: /usr/local/bin/get-blog
+      job: "/usr/local/bin/get-blog"
 
       

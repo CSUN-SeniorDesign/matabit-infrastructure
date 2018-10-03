@@ -2,7 +2,7 @@
 
 resource "aws_launch_configuration" "asg_conf" {
   name_prefix = "terraform-"
-  image_id      = "ami-024186669f68d1d1b"
+  image_id      = "ami-01e145f2beef87dbb"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.web_sg.id}"]
   user_data = "${file("../cloud-init.conf")}"
