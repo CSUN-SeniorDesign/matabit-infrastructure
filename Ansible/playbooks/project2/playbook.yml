@@ -8,4 +8,5 @@
     - mkdir-env
     - establish-index-nginx
     - nginx-hugo
+    - ec2-get-blog
     
