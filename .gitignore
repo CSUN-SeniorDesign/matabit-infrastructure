@@ -11,6 +11,8 @@
 # ansible file
 *.retry
 
+#Mac
+.DS_Store
 
 # General
 .vagrant/
