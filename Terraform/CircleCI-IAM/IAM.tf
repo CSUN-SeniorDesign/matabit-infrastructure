@@ -53,20 +53,19 @@ resource "aws_iam_user" "ec2-get" {
   name = "ec2-get"
 }
 
-resource "aws_iam_group" "ec2-get" {
-  name = "ec2-get"
-}
+# resource "aws_iam_group" "ec2-get" {
+#   name = "ec2-get"
+# }
 
-resource "aws_iam_group_membership" "ec2-get" {
-  name  = "ec2-get"
-  users = ["${aws_iam_user.ec2-get.id}"]
-  group = "${aws_iam_group.ec2-get.name}"
-}
+# resource "aws_iam_group_membership" "ec2-get" {
+#   name  = "ec2-get"
+#   users = ["${aws_iam_user.ec2-get.id}"]
+#   group = "${aws_iam_group.ec2-get.name}"
+# }
 
 /* IAM Policies */
-resource "aws_iam_group_policy" "ec2-get" {
-  name  = "ec2-get"
-  group = "${aws_iam_group.ec2-get.id}"
+resource "aws_iam_policy" "ec2-get" {
+  name = "ec2-get"
 
   policy = <<EOF
 {
@@ -81,4 +80,53 @@ resource "aws_iam_group_policy" "ec2-get" {
     ]
 }
 EOF
+}
+
+resource "aws_iam_role" "ec2-get" {
+  name = "ec2-get-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+  EOF
+}
+
+resource "aws_iam_instance_profile" "ec2-get" {
+  name = "ec2-get-profile"
+  role = "${aws_iam_role.ec2-get.name}"
+}
+
+resource "aws_iam_role_policy" "ec2-get" {
+  name = "ec2-get-role-policy"
+  role = "${aws_iam_role.ec2-get.id}"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::*/*",
+                "arn:aws:s3:::matabit-circleci"
+            ]
+        }
+    ]
+}
+  EOF
 }
