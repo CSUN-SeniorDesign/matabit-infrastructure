@@ -1,4 +1,13 @@
 
+data "terraform_remote_state" "circleci" {
+  backend = "s3"
+  config {
+    bucket = "matabit-terraform-state-bucket"
+    region = "us-west-2"
+    key    = "circle-ci-iam/terraform.tfstate"
+    name   = "circle-ci-iam/terraform.tfstate"
+  }
+}
 
 resource "aws_launch_configuration" "asg_conf" {
   name_prefix = "terraform-"
@@ -6,6 +15,7 @@ resource "aws_launch_configuration" "asg_conf" {
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.web_sg.id}"]
   user_data = "${file("../cloud-init.conf")}"
+  #iam_instance_profile = "${data.terraform_remote_state.circleci.ec2-get-iam-role}"
 
   lifecycle {
     create_before_destroy = true
