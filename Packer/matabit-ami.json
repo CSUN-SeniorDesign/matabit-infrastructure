@@ -15,8 +15,8 @@
         "region": "us-west-2",
         "source_ami": "ami-0bbe6b35405ecebdb",
         "instance_type": "t2.micro",
-        "vpc_id": "vpc-0decb808fa58893e3",
-        "subnet_id": "subnet-0a835301b50d17a4f",
+        "vpc_id": "vpc-0553d43b1f13cc99e",
+        "subnet_id": "subnet-0a397f709535c5773",
         "ssh_username": "ubuntu",
         "ami_name": "matabit-ami {{timestamp}}"
     }]

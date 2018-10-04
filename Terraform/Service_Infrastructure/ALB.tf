@@ -17,6 +17,7 @@ resource "aws_lb" "alb" {
   subnets = [
     "${data.terraform_remote_state.vpc.aws_subnet_public_a_id}",
     "${data.terraform_remote_state.vpc.aws_subnet_public_b_id}",
+    "${data.terraform_remote_state.vpc.aws_subnet_public_c_id}"
   ]
 
   tags {

@@ -25,3 +25,5 @@
 
 # Public.zip from hugo
 public.zip
+
+*.log
