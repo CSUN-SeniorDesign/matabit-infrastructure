@@ -1,4 +1,3 @@
-
 data "terraform_remote_state" "circleci" {
   backend = "s3"
   config {
