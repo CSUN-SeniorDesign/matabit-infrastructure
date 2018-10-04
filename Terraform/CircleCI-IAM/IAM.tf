@@ -53,16 +53,6 @@ resource "aws_iam_user" "ec2-get" {
   name = "ec2-get"
 }
 
-# resource "aws_iam_group" "ec2-get" {
-#   name = "ec2-get"
-# }
-
-# resource "aws_iam_group_membership" "ec2-get" {
-#   name  = "ec2-get"
-#   users = ["${aws_iam_user.ec2-get.id}"]
-#   group = "${aws_iam_group.ec2-get.name}"
-# }
-
 /* IAM Policies */
 resource "aws_iam_policy" "ec2-get" {
   name = "ec2-get"
