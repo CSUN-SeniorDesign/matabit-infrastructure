@@ -19,7 +19,7 @@ resource "aws_launch_configuration" "asg_conf" {
 ```
 
 ## ASG setup
-The aws_autoscaling_group resource will determine the desired number of EC2 instances to spin up and the maximum amoutn if more are needed. It will determine the type of health check to perform on our instances and which launch configurtion to attach. It will set the subnets we wish to run the instances in and will also attach our ALB target group.
+The aws_autoscaling_group resource will determine the desired number of EC2 instances to spin up and the maximum amount if more are needed. It will determine the type of health check to perform on our instances and which launch configuration to attach. It will set the subnets we wish to run the instances in and will also attach our ALB target group.
 
 ```
 resource "aws_autoscaling_group" "asg" {
