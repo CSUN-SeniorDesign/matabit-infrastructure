@@ -61,7 +61,7 @@ resource "aws_route53_record" "alb-record-apex" {
 }
 ```
 
-In addition, we have staging routes
+In addition, we have staging routes.
 
 ```
 resource "aws_route53_record" "alb-record-www-staging" {
