@@ -21,9 +21,9 @@ Can be tracked easily with DataDog since they are built in. Simply navigate to t
 
 Additional metrics need to be tracked were: 
 
-    • The number of requests to your website
-    • The latency for requests to your website
-    • Status codes of requests to your server (2xx, 3xx, 4xx, 5xx)
+    - The number of requests to your website
+    - The latency for requests to your website
+    - Status codes of requests to your server (2xx, 3xx, 4xx, 5xx)
 
 A custom config file needs to be created in order to track theses metrics through DataDog.
 
