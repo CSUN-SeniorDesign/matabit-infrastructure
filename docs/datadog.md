@@ -2,20 +2,20 @@
 
 Datadog is a monitoring service for cloud-scale applications, providing monitoring of servers, databases, tools, and services, through a SaaS-based data analytics platform. Formally python based, DataDog now uses a GO based agent that will deliver metrics and events across the full devops stack such as: 
 
-    ⋅⋅* Automation tools
-    ⋅⋅*Monitoring and instrumentation
-    ⋅⋅*Source control and bug tracking
-    ⋅⋅*Databases and common server components
-    ⋅⋅*All listed integration's are supported by Datadog
-    ⋅⋅*SaaS and Cloud providers
+    - Automation tools
+    - Monitoring and instrumentation
+    - Source control and bug tracking
+    - Databases and common server components
+    - All listed integration's are supported by Datadog
+    - SaaS and Cloud providers
 
     Simple metrics such as:
 
-    ⋅⋅*CPU usage
-    ⋅⋅*CPU load averages (1 minutes, 5 minute, 15 minute)
-    ⋅⋅*Memory usage by the system
-    ⋅⋅*Disk usage on the system
-    ⋅⋅*Process Uptime
+    - CPU usage
+    - CPU load averages (1 minutes, 5 minute, 15 minute)
+    - Memory usage by the system
+    - Disk usage on the system
+    - Process Uptime
 
 Can be tracked easily with DataDog since they are built in. Simply navigate to the dashboard tap on the left hand side, choose new dashboard, choose the timestamp option. From there a tab at the top will give you a graph option from where you can gather the metrics mentioned above built into DataDog itself. 
 
