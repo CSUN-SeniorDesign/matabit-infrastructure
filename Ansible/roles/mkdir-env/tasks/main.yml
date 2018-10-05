@@ -1,11 +1,14 @@
 ---
-- name: Copy index.nginx-debian.html to the prod folder
+- name: make prod and stagingfolder
   become: true
-  command: mkdir -p /var/www/prod/matabit-blog/public 
-  
-- name: Copy index.nginx-debian.html to the staging folder
-  become: true
-  command: mkdir -p /var/www/staging/matabit-blog/public
+  file:
+    path: "/var/www/{{item}}/matabit-blog/public"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0775
+    recurse: yes
+  with_items: ["prod", "staging"]
   
   
   

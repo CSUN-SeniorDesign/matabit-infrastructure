@@ -1,55 +1,48 @@
-terraform {
-    backend "s3" {
-        bucket = "matabit-terraform-state-bucket"
-        region = "us-west-2"
-        dynamodb_table = "matabit-terraform-statelock"
-        key = "ALB/terraform.tfstate"
-    }
-}
-
 data "aws_acm_certificate" "matabit" {
-    domain = "matabit.org"
-    types = ["AMAZON_ISSUED"]
-    most_recent = true
+  domain      = "matabit.org"
+  types       = ["AMAZON_ISSUED"]
+  most_recent = true
 }
 
 #define ALB
 resource "aws_lb" "alb" {
-    name = "aws-lb"
-    internal = false
-    load_balancer_type = "application"
-    security_groups = ["${aws_security_group.security-lb.id}"]
-    idle_timeout = "60"
-    enable_cross_zone_load_balancing = true
-    enable_deletion_protection = false
-    subnets = [
-                "${data.terraform_remote_state.vpc.aws_subnet_public_a_id}",
-                "${data.terraform_remote_state.vpc.aws_subnet_public_b_id}"
-              ]
+  name                             = "aws-lb"
+  internal                         = false
+  load_balancer_type               = "application"
+  security_groups                  = ["${aws_security_group.security-lb.id}"]
+  idle_timeout                     = "60"
+  enable_cross_zone_load_balancing = true
+  enable_deletion_protection       = false
 
-    tags {
-        Name = "matabit-alb"
-    }
+  subnets = [
+    "${data.terraform_remote_state.vpc.aws_subnet_public_a_id}",
+    "${data.terraform_remote_state.vpc.aws_subnet_public_b_id}",
+    "${data.terraform_remote_state.vpc.aws_subnet_public_c_id}"
+  ]
 
-    timeouts {
-        create = "10m"
-        delete = "10m"
-        update = "10m"
-    }
-    
+  tags {
+    Name = "matabit-alb"
+  }
+
+  timeouts {
+    create = "10m"
+    delete = "10m"
+    update = "10m"
+  }
 }
 
 # Security Group: Load Balancer
 resource "aws_security_group" "security-lb" {
   description = "Allow the world to use HTTP from the load balancer"
-  vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
+
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
   ingress {
     from_port   = 443
     to_port     = 443
@@ -65,40 +58,40 @@ resource "aws_security_group" "security-lb" {
   }
 
   tags {
-      Name = "matabit-alb-sg"
+    Name = "matabit-alb-sg"
   }
 }
 
 #listen on port 80 and redirect to port 443
 resource "aws_alb_listener" "frontend_http" {
-    load_balancer_arn = "${aws_lb.alb.arn}"
-    port = "80"
-    protocol = "HTTP"
+  load_balancer_arn = "${aws_lb.alb.arn}"
+  port              = "80"
+  protocol          = "HTTP"
 
-    default_action {
-        type = "redirect"
-        target_group_arn = "${aws_alb_target_group.alb_target_group.id}"
-        redirect {
-            port = "443"
-            protocol = "HTTPS"
-            status_code = "HTTP_301"
-        }
+  default_action {
+    type             = "redirect"
+    target_group_arn = "${aws_alb_target_group.alb_target_group.id}"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
     }
+  }
 }
 
 #listen on port 443 and forward traffic
 resource "aws_alb_listener" "frontend_https" {
-    load_balancer_arn = "${aws_lb.alb.arn}"
-    port = "443"
-    protocol = "HTTPS"
-    ssl_policy = "ELBSecurityPolicy-2015-05"
-    certificate_arn = "${data.aws_acm_certificate.matabit.arn}"
+  load_balancer_arn = "${aws_lb.alb.arn}"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2015-05"
+  certificate_arn   = "${data.aws_acm_certificate.matabit.arn}"
 
-
-    default_action {
-        type = "forward"
-        target_group_arn = "${aws_alb_target_group.alb_target_group.id}"
-    }
+  default_action {
+    type             = "forward"
+    target_group_arn = "${aws_alb_target_group.alb_target_group.id}"
+  }
 }
 
 #create target group
@@ -125,15 +118,3 @@ resource "aws_alb_target_group" "alb_target_group" {
         port = "80"  
     }
 }
-resource "aws_lb_target_group_attachment" "matabit_alb_tg" {
-  target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
-  target_id        = "${aws_instance.web.id}"
-  port             = 80
-}
-resource "aws_lb_target_group_attachment" "matabit_alb_tg2" {
-  target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
-  target_id        = "${aws_instance.web2.id}"
-  port             = 80
-}
-
-

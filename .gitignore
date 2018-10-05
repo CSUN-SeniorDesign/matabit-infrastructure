@@ -11,6 +11,8 @@
 # ansible file
 *.retry
 
+#Mac
+.DS_Store
 
 # General
 .vagrant/
@@ -23,3 +25,5 @@
 
 # Public.zip from hugo
 public.zip
+
+*.log

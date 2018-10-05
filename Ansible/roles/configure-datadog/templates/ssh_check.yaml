@@ -1,0 +1,7 @@
+init_config:
+
+instances:
+  - host: 127.0.0.1 # required
+    username: root # required
+    password: <SOME_PASSWORD> # or use private_key_file
+

@@ -1,0 +1,19 @@
+---
+  - name: Change http_check template
+    become: true
+    template:
+      src: http_check.yaml
+      dest: /etc/datadog-agent/conf.d/http_check.d/conf.yaml
+  - name: Change nginx template
+    become: true
+    template:
+      src: nginx.yaml
+      dest: /etc/datadog-agent/conf.d/nginx.d/conf.yaml
+  - name: Change ssh_check template
+    become: true
+    template:
+      src: ssh_check.yaml
+      dest: /etc/datadog-agent/conf.d/ssh_check.d/conf.yaml
+  - name: Restart DataDog
+    become: true
+    command: systemctl restart datadog-agent

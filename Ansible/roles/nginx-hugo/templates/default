@@ -10,6 +10,7 @@ server {
 		add_header X-Hostname $hostname;
 		add_header X-Private-IP $server_addr;
 	}
+
 }
 
 server {
@@ -24,4 +25,17 @@ server {
 		add_header X-Hostname $hostname;
 		add_header X-Private-IP $server_addr;
 	}
+}
+
+server {
+  listen 81;
+  server_name localhost;
+
+  access_log off;
+  allow 127.0.0.1;
+  deny all;
+
+  location /nginx_status {
+    stub_status;
+  }
 }
