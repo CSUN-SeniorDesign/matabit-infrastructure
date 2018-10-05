@@ -45,7 +45,7 @@ resource "aws_autoscaling_schedule" "asg_schedule_on" {
   min_size               = 2
   max_size               = 4
   desired_capacity       = 2
-  recurrence             = "0 7 * * *"
+  recurrence             = "0 13 * * *"
   autoscaling_group_name = "${aws_autoscaling_group.asg.name}"
 }
 
@@ -54,7 +54,7 @@ resource "aws_autoscaling_schedule" "asg_schedule_off" {
   min_size               = 0
   max_size               = 0
   desired_capacity       = 0
-  recurrence             = "0 1 * * *"
+  recurrence             = "0 8 * * *"
   autoscaling_group_name = "${aws_autoscaling_group.asg.name}"
 }
 
