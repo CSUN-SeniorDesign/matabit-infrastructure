@@ -4,7 +4,7 @@
 
 Setting up the Terraform file for IAM, ensure that a S3 Bucket backend is chosen as well as a DynamoDB table to ensure State locking, so that only one person at a time can work on a terraform state!
 
-```
+```json
 terraform {
     backend "s3" {
         bucket = "matabit-terraform-state-bucket"
@@ -20,7 +20,7 @@ Also ensure that the region for the provider 'aws' is set to "us-west-2", otherw
 
 It is suggested to set up a password policy for all the IAM users. This enhances security.
 
-```
+```json
 resource "aws_iam_account_password_policy" "strict" {
   minimum_password_length        = 6
   require_lowercase_characters   = true
@@ -38,7 +38,7 @@ An IAM group has to be created and in addition to that a group policy has to be 
 For now we are enabling all the IAM users to have full administrator access, that way all the users can experiment and work on all the resources that they need to.
 
 
-```
+```json
 resource "aws_iam_group" "matabit-admins" {
     name = "matabit-admins"
 }
@@ -54,7 +54,7 @@ resource "aws_iam_group_policy_attachment" "attach-admin-access" {
 ## Create users and define memberships
 
 Create users like such: 
-```
+```json
 resource "aws_iam_user" "thomas" {
     name = "thomas"
 }
@@ -94,3 +94,57 @@ This ensures that everyone can chose the login that they need.
 
 For users to efficiently create their Terraform resoruces, they need Access Keys and Secrets. The users have to log in with their user name into the Management console and create their Access Keys and Secrets in the IAM Service. This way they are not transmitted in unsecured ways.
 
+## Creating a Role policy
+A role policy is useful for aligning permissions based off an instance instead of users. It follows the same methods as the group policies, except it differs in the resource blocks (using roles). We create an IAM role, then an instance profile which is then attached to a role policy
+
+```json
+resource "aws_iam_role" "ec2-get" {
+  name = "ec2-get-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+  EOF
+}
+
+resource "aws_iam_instance_profile" "ec2-get" {
+  name = "ec2-get-profile"
+  role = "${aws_iam_role.ec2-get.name}"
+}
+
+resource "aws_iam_role_policy" "ec2-get" {
+  name = "ec2-get-role-policy"
+  role = "${aws_iam_role.ec2-get.id}"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::*/*",
+                "arn:aws:s3:::matabit-circleci"
+            ]
+        }
+    ]
+}
+  EOF
+}
+
+```
