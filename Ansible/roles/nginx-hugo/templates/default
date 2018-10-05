@@ -10,6 +10,7 @@ server {
 		add_header X-Hostname $hostname;
 		add_header X-Private-IP $server_addr;
 	}
+
 }
 
 server {
