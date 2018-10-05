@@ -2,7 +2,7 @@
 
 Datadog is a monitoring service for cloud-scale applications, providing monitoring of servers, databases, tools, and services, through a SaaS-based data analytics platform. Formally python based, DataDog now uses a GO based agent that will deliver metrics and events across the full devops stack such as: 
 
-    ⋅⋅*Automation tools
+    ⋅⋅* Automation tools
     ⋅⋅*Monitoring and instrumentation
     ⋅⋅*Source control and bug tracking
     ⋅⋅*Databases and common server components
