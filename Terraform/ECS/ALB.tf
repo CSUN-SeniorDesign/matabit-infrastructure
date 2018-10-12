@@ -1,3 +1,16 @@
+terraform {
+  backend "s3" {
+    bucket         = "matabit-terraform-state-bucket"
+    region         = "us-west-2"
+    dynamodb_table = "matabit-terraform-statelock"
+    key            = "Service_Infrastructure/terraform.tfstate"
+  }
+}
+
+provider "aws" {
+  region = "us-west-2"
+}
+
 data "aws_acm_certificate" "matabit" {
   domain      = "matabit.org"
   types       = ["AMAZON_ISSUED"]
