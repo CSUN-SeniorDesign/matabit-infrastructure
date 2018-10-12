@@ -7,6 +7,18 @@ terraform {
   }
 }
 
+
+data "terraform_remote_state" "vpc" {
+  backend = "s3"
+
+  config {
+    bucket = "matabit-terraform-state-bucket"
+    region = "us-west-2"
+    key    = "VPC/terraform.tfstate"
+    name   = "VPC/terraform.tfstate"
+  }
+}
+
 provider "aws" {
   region = "us-west-2"
 }
