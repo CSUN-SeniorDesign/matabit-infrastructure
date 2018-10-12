@@ -2,6 +2,7 @@ terraform {
   backend "s3" {
     bucket = "matabit-terraform-state-bucket"
     region = "us-west-2"
+    dynamodb_table = "matabit-terraform-statelock"
     key    = "VPC/terraform.tfstate"
   }
 }
