@@ -86,59 +86,56 @@ resource "aws_security_group" "security-lb" {
   }
 }
 
-# #listen on port 80 and redirect to port 443
-# resource "aws_alb_listener" "frontend_http" {
-#   load_balancer_arn = "${aws_lb.alb.arn}"
-#   port              = "80"
-#   protocol          = "HTTP"
+#listen on port 80 and redirect to port 443
+resource "aws_alb_listener" "frontend_http" {
+  load_balancer_arn = "${aws_lb.alb.arn}"
+  port              = "80"
+  protocol          = "HTTP"
 
-#   default_action {
-#     type             = "redirect"
-#     target_group_arn = "${aws_alb_target_group.alb_target_group.id}"
+  default_action {
+    type             = "redirect"
+    target_group_arn = "${aws_alb_target_group.alb_target_group.id}"
 
-#     redirect {
-#       port        = "443"
-#       protocol    = "HTTPS"
-#       status_code = "HTTP_301"
-#     }
-#   }
-# }
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
 
-# #listen on port 443 and forward traffic
-# resource "aws_alb_listener" "frontend_https" {
-#   load_balancer_arn = "${aws_lb.alb.arn}"
-#   port              = "443"
-#   protocol          = "HTTPS"
-#   ssl_policy        = "ELBSecurityPolicy-2015-05"
-#   certificate_arn   = "${data.aws_acm_certificate.matabit.arn}"
+#listen on port 443 and forward traffic
+resource "aws_alb_listener" "frontend_https" {
+  load_balancer_arn = "${aws_lb.alb.arn}"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2015-05"
+  certificate_arn   = "${data.aws_acm_certificate.matabit.arn}"
 
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = "${aws_alb_target_group.alb_target_group.id}"
-#   }
-# }
+  default_action {
+    type             = "forward"
+    target_group_arn = "${aws_alb_target_group.alb_target_group.id}"
+  }
+}
 
-# #create target group
-# resource "aws_alb_target_group" "alb_target_group" {  
-#     name = "target-group-web"  
-#     port = "80"  
-#     protocol = "HTTP"  
-#     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"   
-#     tags {    
-#         name = "target-group-web"    
-#     }   
-#     stickiness {    
-#         type = "lb_cookie"    
-#         cookie_duration = 1800    
-#         enabled = true
-#     }   
-    
-#     health_check {    
-#         healthy_threshold = 3    
-#         unhealthy_threshold = 10    
-#         timeout = 5    
-#         interval = 10
-#         path = "/"    
-#         port = "80"  
-#     }
-# }
+#create target group
+resource "aws_alb_target_group" "alb_target_group" {
+  name        = "target-group-ecs"
+  port        = "80"
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
+  health_check {
+        healthy_threshold   = "5"
+        unhealthy_threshold = "2"
+        interval            = "30"
+        matcher             = "200"
+        path                = "/"
+        port                = "traffic-port"
+        protocol            = "HTTP"
+        timeout             = "5"
+    }
+  tags {
+    name = "target-group-ecs"
+  }
+}
