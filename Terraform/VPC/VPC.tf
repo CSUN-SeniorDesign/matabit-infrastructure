@@ -88,14 +88,6 @@ resource "aws_subnet" "private-subnet-c" {
   }
 }
 
-# Define the internet gateway
-resource "aws_internet_gateway" "gw" {
-  vpc_id = "${aws_vpc.default.id}"
-
-  tags {
-    Name = "VPC IGW"
-  }
-}
 
 # Define public route table
 resource "aws_route_table" "public-rt" {
@@ -103,7 +95,6 @@ resource "aws_route_table" "public-rt" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.gw.id}"
   }
 
   tags {

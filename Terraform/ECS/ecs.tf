@@ -37,10 +37,11 @@ resource "aws_ecs_service" "matabit-prod-service" {
   task_definition = "${aws_ecs_task_definition.matabit-prod.arn}"
   desired_count   = 2
   launch_type = "FARGATE"
+  
 
   network_configuration {
     security_groups = ["${aws_security_group.security-lb.id}"]
-
+    assign_public_ip = true
     subnets = [
       "${data.terraform_remote_state.vpc.aws_subnet_public_a_id}",
       "${data.terraform_remote_state.vpc.aws_subnet_public_b_id}",
@@ -49,7 +50,7 @@ resource "aws_ecs_service" "matabit-prod-service" {
   }
 
   load_balancer {
-    target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
+    target_group_arn = "${aws_alb_target_group.alb_target_group_prod.id}"
     container_name   = "matabit-prod-container"
     container_port   = 80
   }
@@ -60,10 +61,11 @@ resource "aws_ecs_service" "matabit-staging-service" {
   task_definition = "${aws_ecs_task_definition.matabit-staging.arn}"
   desired_count   = 2
   launch_type = "FARGATE"
+  
 
   network_configuration {
     security_groups = ["${aws_security_group.security-lb.id}"]
-
+    assign_public_ip = true
     subnets = [
       "${data.terraform_remote_state.vpc.aws_subnet_public_a_id}",
       "${data.terraform_remote_state.vpc.aws_subnet_public_b_id}",
@@ -72,7 +74,7 @@ resource "aws_ecs_service" "matabit-staging-service" {
   }
 
   load_balancer {
-    target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
+    target_group_arn = "${aws_alb_target_group.alb_target_group_staging.id}"
     container_name   = "matabit-staging-container"
     container_port   = 80
   }

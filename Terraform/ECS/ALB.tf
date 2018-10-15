@@ -94,7 +94,7 @@ resource "aws_alb_listener" "frontend_http" {
 
   default_action {
     type             = "redirect"
-    target_group_arn = "${aws_alb_target_group.alb_target_group.id}"
+    target_group_arn = "${aws_alb_target_group.alb_target_group_prod.id}"
 
     redirect {
       port        = "443"
@@ -114,13 +114,13 @@ resource "aws_alb_listener" "frontend_https" {
 
   default_action {
     type             = "forward"
-    target_group_arn = "${aws_alb_target_group.alb_target_group.id}"
-  }
+    target_group_arn = "${aws_alb_target_group.alb_target_group_prod.id}"
+  } 
 }
 
 #create target group
-resource "aws_alb_target_group" "alb_target_group" {
-  name        = "target-group-ecs"
+resource "aws_alb_target_group" "alb_target_group_prod" {
+  name        = "target-group-ecs-prod"
   port        = "80"
   protocol    = "HTTP"
   target_type = "ip"
@@ -136,6 +136,60 @@ resource "aws_alb_target_group" "alb_target_group" {
         timeout             = "5"
     }
   tags {
-    name = "target-group-ecs"
+    name = "target-group-ecs-prod"
   }
 }
+#create target group
+resource "aws_alb_target_group" "alb_target_group_staging" {
+  name        = "target-group-ecs-staging"
+  port        = "80"
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = "${data.terraform_remote_state.vpc.vpc_id}"
+  health_check {
+        healthy_threshold   = "5"
+        unhealthy_threshold = "2"
+        interval            = "30"
+        matcher             = "200"
+        path                = "/"
+        port                = "traffic-port"
+        protocol            = "HTTP"
+        timeout             = "5"
+    }
+  tags {
+    name = "target-group-ecs-staging"
+  }
+}
+
+resource "aws_lb_listener_rule" "matabit-staging" {
+  listener_arn = "${aws_alb_listener.frontend_https.arn}"
+  priority = 10
+
+  action = {
+    type = "forward"
+    target_group_arn = "${aws_alb_target_group.alb_target_group_staging.id}"
+  }
+  condition = {
+    field = "host-header"
+    values = ["*staging.matabit.org"]
+  }
+}
+
+# resource "aws_lb_listener_rule" "matabit-staging-redirect" {
+#   listener_arn = "${aws_alb_listener.frontend_https.arn}"
+#   priority = 20
+
+#   action {
+#       type = "redirect"
+#       redirect {
+#         port = "443"
+#         protocol = "HTTPS"
+#         status_code = "HTTP_301"
+#       }
+#     }
+
+#   condition {
+#     field  = "host-header"
+#     values = ["*staging.matabit.org"]
+#   }
+# }
