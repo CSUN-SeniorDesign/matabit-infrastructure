@@ -48,6 +48,35 @@ resource "aws_iam_group_policy" "circle-ci-put" {
 EOF
 }
 
+/* CircleCI ECR */
+resource "aws_iam_group_policy" "circle-ci-ecr" {
+  name  = "circle-ci-ecr"
+  group = "${aws_iam_group.circleci.id}"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+              "ecr:GetAuthorizationToken",
+              "ecr:BatchCheckLayerAvailability",
+              "ecr:DescribeRepositories",
+			        "ecr:ListImages",
+			        "ecr:DescribeImages",
+              "ecr:InitiateLayerUpload",
+              "ecr:CompleteLayerUpload",
+              "ecr:UploadLayerPart",
+              "ecr:PutImage"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+}
+
 /* EC-2 GET IAM*/
 resource "aws_iam_role" "ec2-get" {
   name = "ec2-get-role"
