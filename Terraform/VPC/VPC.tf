@@ -88,6 +88,32 @@ resource "aws_subnet" "private-subnet-c" {
   }
 }
 
+resource "aws_eip" "nat" {
+  vpc = true
+  tags {
+    Name = "NAT-EIP"
+  }
+}
+
+resource "aws_nat_gateway" "gateway" {
+  allocation_id = "${aws_eip.nat.id}"
+  subnet_id     = "${aws_subnet.public-subnet-a.id}"
+
+  tags {
+    Name = "Fargate-NAT"
+  }
+  
+  depends_on = ["aws_route_table.public-rt"]
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = "${aws_vpc.default.id}"
+
+  tags {
+    Name = "main"
+  }
+}
+
 
 # Define public route table
 resource "aws_route_table" "public-rt" {
@@ -95,11 +121,28 @@ resource "aws_route_table" "public-rt" {
 
   route {
     cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.igw.id}"
   }
 
   tags {
     Name = "public-subnet-route-table"
   }
+}
+
+# Define private route table
+resource "aws_route_table" "private-rt" {
+  vpc_id = "${aws_vpc.default.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = "${aws_nat_gateway.gateway.id}"
+  }
+
+  tags {
+    Name = "private-subnet-route-table"
+  }
+
+  depends_on = ["aws_route_table.public-rt"]
 }
 
 
@@ -117,4 +160,20 @@ resource "aws_route_table_association" "public-rt-b" {
 resource "aws_route_table_association" "public-rt-c" {
   subnet_id      = "${aws_subnet.public-subnet-c.id}"
   route_table_id = "${aws_route_table.public-rt.id}"
+}
+
+# Assign the private subnet to public route
+resource "aws_route_table_association" "private-rt-a" {
+  subnet_id      = "${aws_subnet.private-subnet-a.id}"
+  route_table_id = "${aws_route_table.private-rt.id}"
+}
+
+resource "aws_route_table_association" "private-rt-b" {
+  subnet_id      = "${aws_subnet.private-subnet-b.id}"
+  route_table_id = "${aws_route_table.private-rt.id}"
+}
+
+resource "aws_route_table_association" "private-rt-c" {
+  subnet_id      = "${aws_subnet.private-subnet-c.id}"
+  route_table_id = "${aws_route_table.private-rt.id}"
 }

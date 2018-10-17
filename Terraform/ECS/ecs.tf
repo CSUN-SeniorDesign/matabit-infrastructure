@@ -43,9 +43,9 @@ resource "aws_ecs_service" "matabit-prod-service" {
     security_groups = ["${aws_security_group.security-lb.id}"]
     assign_public_ip = true
     subnets = [
-      "${data.terraform_remote_state.vpc.aws_subnet_public_a_id}",
-      "${data.terraform_remote_state.vpc.aws_subnet_public_b_id}",
-      "${data.terraform_remote_state.vpc.aws_subnet_public_c_id}",
+      "${data.terraform_remote_state.vpc.aws_subnet_private_a_id}",
+      "${data.terraform_remote_state.vpc.aws_subnet_private_b_id}",
+      "${data.terraform_remote_state.vpc.aws_subnet_private_c_id}",
     ]
   }
 
@@ -67,9 +67,9 @@ resource "aws_ecs_service" "matabit-staging-service" {
     security_groups = ["${aws_security_group.security-lb.id}"]
     assign_public_ip = true
     subnets = [
-      "${data.terraform_remote_state.vpc.aws_subnet_public_a_id}",
-      "${data.terraform_remote_state.vpc.aws_subnet_public_b_id}",
-      "${data.terraform_remote_state.vpc.aws_subnet_public_c_id}",
+      "${data.terraform_remote_state.vpc.aws_subnet_private_a_id}",
+      "${data.terraform_remote_state.vpc.aws_subnet_private_b_id}",
+      "${data.terraform_remote_state.vpc.aws_subnet_private_c_id}",
     ]
   }
 

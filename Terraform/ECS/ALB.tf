@@ -174,22 +174,3 @@ resource "aws_lb_listener_rule" "matabit-staging" {
     values = ["*staging.matabit.org"]
   }
 }
-
-# resource "aws_lb_listener_rule" "matabit-staging-redirect" {
-#   listener_arn = "${aws_alb_listener.frontend_https.arn}"
-#   priority = 20
-
-#   action {
-#       type = "redirect"
-#       redirect {
-#         port = "443"
-#         protocol = "HTTPS"
-#         status_code = "HTTP_301"
-#       }
-#     }
-
-#   condition {
-#     field  = "host-header"
-#     values = ["*staging.matabit.org"]
-#   }
-# }
