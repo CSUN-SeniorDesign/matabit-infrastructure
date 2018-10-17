@@ -4,10 +4,10 @@ client = boto3.client('ecs')
 
 
 response = client.update_service(
-    cluster='anthony-test',
-    service='anthony-service',
-    desiredCount=1,
-    taskDefinition='anthony-task-test',
+    cluster='matabit-cluster',
+    service='matabit-staging-service',
+    desiredCount=2,
+    taskDefinition='matabit-staging',
     deploymentConfiguration={
         'maximumPercent': 200,
         'minimumHealthyPercent': 100
@@ -15,10 +15,12 @@ response = client.update_service(
     networkConfiguration={
         'awsvpcConfiguration': {
             'subnets': [
-                'subnet-0fb75c1b6051a2462',
+                'subnet-02624f50b35667231',
+                'subnet-0b6c65eb2ef718899',
+                'subnet-096c64fec64552e7e'
             ],
             'securityGroups': [
-                'sg-0669b8083b6346e37',
+                'sg-0f696eef4489fc778',
             ],
             'assignPublicIp': 'ENABLED'
         }
