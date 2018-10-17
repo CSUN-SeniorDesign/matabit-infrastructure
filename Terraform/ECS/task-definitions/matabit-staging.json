@@ -1,0 +1,15 @@
+[
+    {
+      "name": "matabit-staging-container",
+      "image": "485876055632.dkr.ecr.us-west-2.amazonaws.com/matabit-ecr:staging",
+      "cpu": 10,
+      "memory": 512,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        }
+      ]
+    }
+]
