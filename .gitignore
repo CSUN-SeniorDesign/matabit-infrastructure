@@ -27,3 +27,5 @@
 public.zip
 
 *.log
+
+.env
