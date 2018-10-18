@@ -97,6 +97,4 @@ resource "aws_route53_record" "alb-record-apex-staging" {
 }
 ```
 
-
-
 Since Application Load Balancers cannot have Elastic IPs assigned to them we have to create Alias records that point to their DNS name.
