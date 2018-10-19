@@ -99,3 +99,4 @@ resource "aws_s3_bucket_notification" "s3-bucket-notification" {
     filter_suffix       = ".txt"
   }
 ```
+
