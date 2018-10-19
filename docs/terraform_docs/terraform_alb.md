@@ -167,3 +167,79 @@ resource "aws_lb_target_group_attachment" "matabit_alb_tg2" {
   port             = 80
 }
 ```
+
+## Project 3 AWS ALB
+
+For project 3, several things needed to be changed with the ALB file. The first thing was the AWS ACM: a new certificate that includes these SANs:
+
+```
+matabit.org, *.matabit.org, *.staging.matabit.org
+```
+
+The reason for that was because the ALB Listeners could not resolve the certificate correctly for the *.staging.matabit.org with the containers the way the EC2 instances were able to.
+
+The second thing that was added  is that the ALB now has two target groups which are:
+
+```
+target-group-ecs-staging 
+target-group-ecs-prod
+```
+
+These two target groups are pointing to their respective ECS services that have control over the docker containers. So one for production and one for staging.
+
+The third thing was an additional rule was added to the ALB Listener:
+
+```
+resource "aws_lb_listener_rule" "matabit-staging" {
+  listener_arn = "${aws_alb_listener.frontend_https.arn}"
+  priority = 10
+
+  action = {
+    type = "forward"
+    target_group_arn = "${aws_alb_target_group.alb_target_group_staging.id}"
+  }
+  condition = {
+    field = "host-header"
+    values = ["*staging.matabit.org"]
+  }
+}
+```
+
+The ALB still contains the default rules:
+
+```
+#listen on port 80 and redirect to port 443
+resource "aws_alb_listener" "frontend_http" {
+  load_balancer_arn = "${aws_lb.alb.arn}"
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "redirect"
+    target_group_arn = "${aws_alb_target_group.alb_target_group_prod.id}"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+#listen on port 443 and forward traffic
+resource "aws_alb_listener" "frontend_https" {
+  load_balancer_arn = "${aws_lb.alb.arn}"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2015-05"
+  certificate_arn   = "${data.aws_acm_certificate.matabit.arn}"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = "${aws_alb_target_group.alb_target_group_prod.id}"
+  } 
+}
+```
+
+Whenever the *staging.matabit.org route website is reached it will forward them to the ECS Staging service and all other traffic directed to the ALB will be redirected to the ECS Prod service.
+
