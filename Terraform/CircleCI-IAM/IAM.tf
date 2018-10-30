@@ -37,10 +37,15 @@ resource "aws_iam_group_policy" "circle-ci-put" {
     "Statement": [
         {
             "Effect": "Allow",
-            "Action": "s3:PutObject",
+            "Action": [
+              "s3:PutObject",
+              "s3:DeleteObject",
+              "s3:ListBucket"
+            ],
             "Resource": [
               "arn:aws:s3:::*/*",
-              "arn:aws:s3:::matabit-circleci"
+              "arn:aws:s3:::matabit-circleci",
+              "arn:aws:s3:::matabit-circleci/*"
               ]
         }
     ]
