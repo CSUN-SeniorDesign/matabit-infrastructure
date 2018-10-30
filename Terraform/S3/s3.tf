@@ -23,4 +23,10 @@ resource "aws_s3_bucket" "matabit-circleci" {
     Name        = "matabit-circleci"
     Environment = "Dev"
   }
+
+  website {
+    index_document = "index.html"
+
+    error_document = "404.html"
+  }
 }
