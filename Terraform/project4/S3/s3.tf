@@ -13,7 +13,19 @@ provider "aws" {
 
 resource "aws_s3_bucket" "matabit-circleci" {
   bucket = "matabit-circleci"
-  acl    = "private"
+  acl    = "public-read"
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement":[{
+  	"Sid": "AddPerm",
+  	"Effect": "Allow",
+  	"Principal": "*",
+  	"Action": ["s3:GetObject"],
+  	"Resource": ["arn:aws:s3:::matabit-circleci/*"]
+  }]
+}
+ POLICY
 
   versioning {
     enabled = true
@@ -26,7 +38,6 @@ resource "aws_s3_bucket" "matabit-circleci" {
 
   website {
     index_document = "index.html"
-
     error_document = "404.html"
   }
 }
