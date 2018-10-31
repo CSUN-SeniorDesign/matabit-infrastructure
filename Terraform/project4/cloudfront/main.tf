@@ -67,6 +67,8 @@ resource "aws_cloudfront_distribution" "matabit_distribution" {
     }
   }
 
+  aliases = ["matabit.org"]
+
   restrictions {
     geo_restriction {
       restriction_type = "none"
