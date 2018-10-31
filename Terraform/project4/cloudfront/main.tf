@@ -60,14 +60,13 @@ resource "aws_cloudfront_distribution" "matabit_distribution" {
 
     forwarded_values {
       query_string = false
-
       cookies {
         forward = "none"
       }
     }
   }
 
-  aliases = ["matabit.org"]
+  aliases = ["matabit.org","www.matabit.org","blog.matabit.org"]
 
   restrictions {
     geo_restriction {
