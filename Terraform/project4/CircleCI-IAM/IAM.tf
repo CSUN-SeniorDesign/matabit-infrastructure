@@ -44,8 +44,8 @@ resource "aws_iam_group_policy" "circle-ci-put" {
             ],
             "Resource": [
               "arn:aws:s3:::*/*",
-              "arn:aws:s3:::matabit-circleci",
-              "arn:aws:s3:::matabit-circleci/*"
+              "arn:aws:s3:::matabit.org",
+              "arn:aws:s3:::matabit.org/*"
               ]
         }
     ]

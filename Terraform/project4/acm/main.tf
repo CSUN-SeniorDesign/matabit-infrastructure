@@ -7,13 +7,12 @@ terraform {
   }
 }
 
-
 provider "aws" {
   region = "us-west-2"
 }
 
 resource "aws_acm_certificate" "matabit-cert" {
-  domain_name = "*.matabit.org"
+  domain_name       = "*.matabit.org"
   validation_method = "EMAIL"
 
   subject_alternative_names = ["matabit.org"]

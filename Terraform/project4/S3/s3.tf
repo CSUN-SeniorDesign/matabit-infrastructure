@@ -11,8 +11,8 @@ provider "aws" {
   region = "us-west-2"
 }
 
-resource "aws_s3_bucket" "matabit-circleci" {
-  bucket = "matabit-circleci"
+resource "aws_s3_bucket" "matabit" {
+  bucket = "matabit.org"
   acl    = "public-read"
   policy = <<POLICY
 {
@@ -22,20 +22,13 @@ resource "aws_s3_bucket" "matabit-circleci" {
   	"Effect": "Allow",
   	"Principal": "*",
   	"Action": ["s3:GetObject"],
-  	"Resource": ["arn:aws:s3:::matabit-circleci/*"]
+  	"Resource": ["arn:aws:s3:::matabit.org/*"]
   }]
 }
  POLICY
-
   versioning {
     enabled = true
   }
-
-  tags {
-    Name        = "matabit-circleci"
-    Environment = "Dev"
-  }
-
   website {
     index_document = "index.html"
     error_document = "404.html"
