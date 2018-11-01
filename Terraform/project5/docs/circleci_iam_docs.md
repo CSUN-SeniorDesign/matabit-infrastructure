@@ -1,12 +1,10 @@
-terraform {
-  backend "s3" {
-    bucket         = "matabit-terraform-state-bucket"
-    region         = "us-west-2"
-    dynamodb_table = "matabit-terraform-statelock"
-    key            = "circle-ci-iam/s3.tfstate"
-  }
-}
+# Creating IAM user for CircleCI
 
+Creating our IAM user for CircleCI was pretty simple considering most of what we needed was already there from previous projects. 
+
+The terraform file will create an IAM user account for CircleCI and assign it to a group. It creates a policy for that group which has permissions to put and delete objects from an S3 bucket. One of the S3 buckets specified for these actions is our matabit.org bucket which will be storing our website contents. This policy will allow CircleCI to push new contents into the bucket whenever it is manually approved to do so.
+
+```
 provider "aws" {
   region = "us-west-2"
 }
@@ -52,3 +50,4 @@ resource "aws_iam_group_policy" "circle-ci-put" {
 }
 EOF
 }
+```
